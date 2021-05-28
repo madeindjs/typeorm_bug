@@ -1,11 +1,18 @@
 version: "3.3"
 services:
-  backend:
+  extension_bug:
     image: node:14.15.4
     working_dir: /usr/src/app
     command: bash -c "npm install && npm run start"
     volumes:
-      - ./backend:/usr/src/app
+      - ./extension_bug:/usr/src/app
+
+  cache_bug:
+    image: node:14.15.4
+    working_dir: /usr/src/app
+    command: bash -c "npm install && npm run start"
+    volumes:
+      - ./cache_bug:/usr/src/app
 
   postgres:
     image: arousseau/postgres-replication:12.3
