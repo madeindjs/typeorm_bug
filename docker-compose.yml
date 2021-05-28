@@ -1,0 +1,36 @@
+version: "3.3"
+services:
+  backend:
+    image: node:14.15.4
+    working_dir: /usr/src/app
+    command: bash -c "npm install && npm run start"
+    volumes:
+      - ./backend:/usr/src/app
+
+  postgres:
+    image: arousseau/postgres-replication:12.3
+    environment:
+      POSTGRES_USER: arousseau
+      POSTGRES_PASSWORD: password
+      REPLICATION_USER: arousseau_rep
+      REPLICATION_PASSWORD: password
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+
+  postgres-slave:
+    image: arousseau/postgres-replication:12.3
+    links:
+      - postgres
+    environment:
+      POSTGRES_USER: arousseau
+      POSTGRES_PASSWORD: password
+      REPLICATION_USER: arousseau_rep
+      REPLICATION_PASSWORD: password
+      REPLICATION_ROLE: slave
+      POSTGRES_MASTER_SERVICE_HOST: postgres
+    expose:
+      - 5432
+    depends_on:
+      - postgres
